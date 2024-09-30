@@ -1,0 +1,16 @@
+|||
+| -----------------------| ------------- |
+| **Description** | Функціонування АРМ з порушенням вимог Інструкції з організації антивірусного захисту в ІТС МО України та ЗСУ |
+|||
+| **IP address**|{ip}|
+| **Hostname**|{hostname}|
+| **Responsible Person**|{responsible}|
+| **Responsible for IS**|{responsible_is}|
+| **Responsible Unit**|{unit}|
+|||
+| **Criticality category**|{critical}|
+****
+**Timeline:**
+```
+{date} {content}
+```

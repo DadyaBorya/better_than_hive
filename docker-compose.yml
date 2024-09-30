@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  hive_fast_api:
+    build:
+      context: ./hive_fast_api
+      dockerfile: Dockerfile
+    ports:
+      - '8000:80'
+    environment:
+      - API_KEY=${API_KEY}
+      - URL=${URL}
+      - ASSIGNEE=${ASSIGNEE}
+    volumes:
+      - ./hive_fast_api:/code
+    networks:
+      - hive_network
+
+  hive_web_face:
+    build:
+      context: ./hive_web_face
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    environment:
+      - VITE_SERVER_URL=http://localhost:8000/api/v1/
+    volumes:
+      - ./hive_web_face:/app
+      - /app/node_modules
+    depends_on:
+      - hive_fast_api
+    networks:
+      - hive_network
+    command: sh -c "npm install && npm run build && serve -s dist"
+
+networks:
+  hive_network:
+    driver: bridge
