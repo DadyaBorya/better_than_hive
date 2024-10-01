@@ -13,6 +13,7 @@ import TitleCard from '../components/TitleCard'
 import { CaseController } from '../controllers/CaseController'
 import { CreateCaseEsetRequest } from '../requests/caseEset'
 import { CaseResponse } from '../responses/case'
+import { getCaseUrl } from '../utils/case'
 import { fromTsToDateStr } from '../utils/date'
 
 const internetOptions = [
@@ -26,7 +27,7 @@ const criticalCategoryOptions = [
 	{ value: 3, label: '3' },
 ]
 
-export function AVCaseFormPage() {
+export function EsetCaseFormPage() {
 	const [esetCases, setEsetCases] = useState<CaseResponse[]>([])
 	const [date, setDate] = useState<Date>(new Date())
 
@@ -38,10 +39,6 @@ export function AVCaseFormPage() {
 	const fetchData = async () => {
 		const data = await CaseController.caseEset(date)
 		setEsetCases(data)
-	}
-
-	const getCaseUrl = (case_id: string) => {
-		return `https://irm.cyber.ua/index.html#!/case/~${case_id}/details`
 	}
 
 	useEffect(() => {
@@ -91,11 +88,9 @@ export function AVCaseFormPage() {
 	}
 
 	return (
-		<div>
-			<form
-				onSubmit={handleSubmit(onSubmit)}
-				className='flex flex-col gap-3 mb-8'
-			>
+		<div className='flex flex-col gap-2'>
+			<TitleCard title='ADD ESET CASE' />
+			<form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-3'>
 				<Input
 					label='IP'
 					{...register('ip', {
@@ -171,7 +166,13 @@ export function AVCaseFormPage() {
 							#{i.number}
 						</StyledLink>,
 						fromTsToDateStr(i.endDate),
-						i.status,
+						<div
+							className={
+								i.status === 'Resolved' ? 'text-green-500' : 'text-red-500'
+							}
+						>
+							{i.status}
+						</div>,
 					])}
 				/>
 			</div>

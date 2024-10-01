@@ -1,5 +1,6 @@
 # app/hive_api.py
 from datetime import datetime
+import json
 from pathlib import Path
 from typing import List, Optional
 
@@ -39,6 +40,13 @@ class HiveApi:
         if fields is None:
             fields = {}
         self.hive.case.update(case_id=case_id, fields=fields, **kwargs)
+
+    def query_find_cases(self, query:str):
+         return self.hive.session.make_request(
+            method="POST",
+            path="/api/v1/query?name=cases.count",
+            json=json.loads(query)
+        )
 
     def find_cases(self,
                    created_at: (Optional[int], Optional[int]) = None,

@@ -4,4 +4,4 @@ from pydantic import BaseModel, Field
 
 
 class CaseQueryRequest(BaseModel):
-    title: Optional[str] = Field(None)
+    query: str

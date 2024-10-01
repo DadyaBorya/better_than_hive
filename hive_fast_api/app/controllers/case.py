@@ -22,11 +22,11 @@ async def anti_virus_case_create(avc: AVCaseRequest, api: HiveApi = Depends(get_
 
 
 @router.post("/case")
-async def case(query: CaseQueryRequest, api: HiveApi = Depends(get_hive_api)):
-    return api.find_cases(like_title=query.title, limited_count=False)
+async def case(req: CaseQueryRequest, api: HiveApi = Depends(get_hive_api)):
+    return api.query_find_cases(query=req.query)
 
 
 @router.post("/case/eset/today")
-async def cases_eset(query: CaseEsetQueryRequest, api: HiveApi = Depends(get_hive_api)):
-    date = (date_to_timestamp_ms_min(query.date), date_to_timestamp_ms_max(query.date))
+async def cases_eset(req: CaseEsetQueryRequest, api: HiveApi = Depends(get_hive_api)):
+    date = (date_to_timestamp_ms_min(req.date), date_to_timestamp_ms_max(req.date))
     return api.find_cases(like_av=True, created_at=date, limited_count=False)

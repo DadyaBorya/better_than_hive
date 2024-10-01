@@ -1,8 +1,8 @@
-import { AVCaseFormPage } from '../pages/AVCaseForm'
-import { CaseListPage } from '../pages/CaseList'
 import { DailyStatPage } from '../pages/DailyStat'
+import { EsetCaseFormPage } from '../pages/EsetCaseForm'
 import { GeneralStatPage } from '../pages/GeneralStat'
 import { MainPage } from '../pages/Main'
+import { PterodoCasesPage } from '../pages/PterodoCases'
 import { Route } from './AppRoutes'
 
 export const publicRoutes: Route[] = [
@@ -11,8 +11,8 @@ export const publicRoutes: Route[] = [
 		element: <MainPage />,
 	},
 	{
-		path: '/case/add',
-		element: <AVCaseFormPage />,
+		path: '/case/eset/add',
+		element: <EsetCaseFormPage />,
 	},
 	{
 		path: '/general',
@@ -24,6 +24,6 @@ export const publicRoutes: Route[] = [
 	},
 	{
 		path: '/cases',
-		element: <CaseListPage />,
+		element: <PterodoCasesPage />,
 	},
 ]

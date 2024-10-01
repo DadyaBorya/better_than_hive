@@ -4,4 +4,5 @@ export interface CaseResponse {
 	status: string
 	number: string
 	endDate: number
+	_createdAt: number
 }

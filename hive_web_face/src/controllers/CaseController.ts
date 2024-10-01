@@ -23,4 +23,9 @@ export class CaseController {
 		const res = await CaseRepo.caseEset(formatedDate)
 		return res.data
 	}
+
+	static async findCasesPterodo(): Promise<CaseResponse[]> {
+		const res = await CaseRepo.findCasesPterodo()
+		return res.data
+	}
 }
