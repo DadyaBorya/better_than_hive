@@ -15,8 +15,8 @@ const links: ILink[] = [
 	{ to: '/', title: 'HOME' },
 	{ to: 'daily', title: 'DAILY STAT' },
 	{ to: 'general', title: 'GENERAL STAT' },
-	{ to: 'case/eset/add', title: 'ESET CASE' },
-	{ to: 'cases', title: 'PTERODO CASES' },
+	{ to: 'cases/eset', title: 'ESET CASES' },
+	{ to: 'cases/pterodo', title: 'PTERODO CASES' },
 ]
 
 export const Header: FC<HeaderProps> = ({ logoSrc, title }) => {

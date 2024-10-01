@@ -1,56 +1,38 @@
 import { useEffect } from 'react'
-import { confirmAlert } from 'react-confirm-alert'
-import 'react-confirm-alert/src/react-confirm-alert.css'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import Button from '../components/Button'
 import Input from '../components/Input'
 import Select from '../components/Select'
 import TitleCard from '../components/TitleCard'
-import { CaseController } from '../controllers/CaseController'
-import { CreateCaseEsetRequest } from '../requests/createCaseEset'
-import { criticalCategoryOptions, internetOptions } from '../utils/case'
+import { CreateCasePterodoRequest } from '../requests/createCasePterodo'
+import {
+	criticalCategoryOptions,
+	internetOptions,
+	isExistOptions,
+} from '../utils/case'
 
-export function EsetCaseFormPage() {
+export function PterodoCaseFormPage() {
 	const { register, handleSubmit, formState, reset } =
-		useForm<CreateCaseEsetRequest>({
+		useForm<CreateCasePterodoRequest>({
 			mode: 'onChange',
 		})
 
-	useEffect(() => {
-		resetForm()
-	}, [])
-
 	const errors = formState.errors
 
-	const resetForm = () =>
+	const onSubmit: SubmitHandler<CreateCasePterodoRequest> = async data => {
+		console.log(data)
+	}
+
+	useEffect(() => {
 		reset({
-			content: 'АРМ без АВПЗ',
 			critical: 3,
 			internet: 'Internet',
 		})
-
-	const onSubmit: SubmitHandler<CreateCaseEsetRequest> = async data => {
-		const res = await CaseController.createCaseEset(data)
-
-		confirmAlert({
-			title: 'Case was added',
-			message: `Case #${res.case_number}. Do you want to clear the fields?`,
-			buttons: [
-				{
-					label: 'Yes',
-					onClick: () => reset(),
-				},
-				{
-					label: 'No',
-				},
-			],
-			overlayClassName: 'bg-red-300',
-		})
-	}
+	}, [])
 
 	return (
 		<div className='flex flex-col gap-2'>
-			<TitleCard title='ADD ESET CASE' />
+			<TitleCard title='ADD PTERODA CASE' />
 			<form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-3'>
 				<Input
 					label='IP'
@@ -64,16 +46,19 @@ export function EsetCaseFormPage() {
 					})}
 					error={errors.ip?.message}
 				/>
+
 				<Input
 					label='Hostname'
 					{...register('hostname', { required: 'This field is required' })}
 					error={errors.hostname?.message}
 				/>
+
 				<Input
 					label='Responsible person'
 					{...register('responsible', { required: 'This field is required' })}
 					error={errors.responsible?.message}
 				/>
+
 				<Input
 					label='Responsible person IS'
 					{...register('responsible_is', {
@@ -81,26 +66,28 @@ export function EsetCaseFormPage() {
 					})}
 					error={errors.responsible_is?.message}
 				/>
+
 				<Input
 					label='Unit'
 					{...register('unit', { required: 'This field is required' })}
 					error={errors.unit?.message}
 				/>
-				<Input
-					label='Content'
-					{...register('content', { required: 'This field is required' })}
-					error={errors.content?.message}
-				/>
+
 				<Select
 					options={internetOptions}
 					label='Internet'
 					{...register('internet')}
 				/>
+
 				<Select
 					options={criticalCategoryOptions}
 					label='Critical category'
 					{...register('critical')}
 				/>
+
+				<Select options={isExistOptions} label='EDR' {...register('edr')} />
+
+				<Select options={isExistOptions} label='AV' {...register('av')} />
 
 				<Button type='submit' variant='outline' size='large'>
 					Submit

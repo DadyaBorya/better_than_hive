@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios'
 import { instance } from '../http'
-import { CreateCaseEsetRequest } from '../requests/caseEset'
 import { CaseQueryRequest } from '../requests/caseQuerry'
+import { CreateCaseEsetRequest } from '../requests/createCaseEset'
 import { CaseResponse } from '../responses/case'
 import { CaseEsetResponse } from '../responses/caseEset'
 

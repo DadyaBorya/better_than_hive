@@ -1,7 +1,9 @@
 import { DailyStatPage } from '../pages/DailyStat'
 import { EsetCaseFormPage } from '../pages/EsetCaseForm'
+import { EsetCasesPage } from '../pages/EsetCases'
 import { GeneralStatPage } from '../pages/GeneralStat'
 import { MainPage } from '../pages/Main'
+import { PterodoCaseFormPage } from '../pages/PterodoCaseForm'
 import { PterodoCasesPage } from '../pages/PterodoCases'
 import { Route } from './AppRoutes'
 
@@ -23,7 +25,15 @@ export const publicRoutes: Route[] = [
 		element: <DailyStatPage />,
 	},
 	{
-		path: '/cases',
+		path: '/cases/pterodo',
 		element: <PterodoCasesPage />,
+	},
+	{
+		path: '/cases/eset',
+		element: <EsetCasesPage />,
+	},
+	{
+		path: '/case/pterodo/add',
+		element: <PterodoCaseFormPage />,
 	},
 ]
