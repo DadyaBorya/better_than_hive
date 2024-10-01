@@ -2,8 +2,9 @@ import { AxiosResponse } from 'axios'
 import { instance } from '../http'
 import { CaseQueryRequest } from '../requests/caseQuerry'
 import { CreateCaseEsetRequest } from '../requests/createCaseEset'
+import { CreateCasePterodoRequest } from '../requests/createCasePterodo'
 import { CaseResponse } from '../responses/case'
-import { CaseEsetResponse } from '../responses/caseEset'
+import { CreateCaseResponse } from '../responses/caseEset'
 
 const queryPterodo = {
 	query: [
@@ -60,10 +61,14 @@ export class CaseRepo {
 
 	static async createEsetCase(
 		data: CreateCaseEsetRequest
-	): Promise<AxiosResponse<CaseEsetResponse>> {
-		console.log(data)
+	): Promise<AxiosResponse<CreateCaseResponse>> {
+		return instance.post<CreateCaseResponse>('/case/eset', data)
+	}
 
-		return instance.post<CaseEsetResponse>('/case/eset', data)
+	static async createPterodoCase(
+		data: CreateCasePterodoRequest
+	): Promise<AxiosResponse<CreateCaseResponse>> {
+		return instance.post<CreateCaseResponse>('/case/pterodo', data)
 	}
 
 	static async caseEset(date: string): Promise<AxiosResponse<CaseResponse[]>> {

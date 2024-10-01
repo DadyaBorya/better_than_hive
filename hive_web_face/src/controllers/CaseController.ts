@@ -1,8 +1,9 @@
 import { CaseRepo } from '../repos/CaseRepo'
 import { CaseQueryRequest } from '../requests/caseQuerry'
 import { CreateCaseEsetRequest } from '../requests/createCaseEset'
+import { CreateCasePterodoRequest } from '../requests/createCasePterodo'
 import { CaseResponse } from '../responses/case'
-import { CaseEsetResponse } from '../responses/caseEset'
+import { CreateCaseResponse } from '../responses/caseEset'
 import { formatDate } from '../utils/date'
 
 export class CaseController {
@@ -13,8 +14,15 @@ export class CaseController {
 
 	static async createCaseEset(
 		data: CreateCaseEsetRequest
-	): Promise<CaseEsetResponse> {
+	): Promise<CreateCaseResponse> {
 		const res = await CaseRepo.createEsetCase(data)
+		return res.data
+	}
+
+	static async createCasePterodo(
+		data: CreateCasePterodoRequest
+	): Promise<CreateCaseResponse> {
+		const res = await CaseRepo.createPterodoCase(data)
 		return res.data
 	}
 

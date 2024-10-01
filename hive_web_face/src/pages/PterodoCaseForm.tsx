@@ -1,9 +1,13 @@
 import { useEffect } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 import Button from '../components/Button'
+import DatePicker from '../components/DatePicker'
 import Input from '../components/Input'
 import Select from '../components/Select'
+import TextArea from '../components/TextArea'
 import TitleCard from '../components/TitleCard'
+import { CaseController } from '../controllers/CaseController'
 import { CreateCasePterodoRequest } from '../requests/createCasePterodo'
 import {
 	criticalCategoryOptions,
@@ -16,17 +20,24 @@ export function PterodoCaseFormPage() {
 		useForm<CreateCasePterodoRequest>({
 			mode: 'onChange',
 		})
+	const navigate = useNavigate()
 
 	const errors = formState.errors
 
 	const onSubmit: SubmitHandler<CreateCasePterodoRequest> = async data => {
-		console.log(data)
+		await CaseController.createCasePterodo(data)
+		navigate('/cases/pteroda')
 	}
 
 	useEffect(() => {
 		reset({
 			critical: 3,
 			internet: 'Internet',
+			threat_actor: 'UAC-0010',
+			malware_type: 'Trojan',
+			delivery: 'Flesh Drive',
+			edr: '+',
+			av: '+',
 		})
 	}, [])
 
@@ -88,6 +99,66 @@ export function PterodoCaseFormPage() {
 				<Select options={isExistOptions} label='EDR' {...register('edr')} />
 
 				<Select options={isExistOptions} label='AV' {...register('av')} />
+
+				<Input
+					label='Threat Actor'
+					{...register('threat_actor', { required: 'This field is required' })}
+					error={errors.threat_actor?.message}
+				/>
+
+				<Input
+					label='Malware Type'
+					{...register('malware_type', { required: 'This field is required' })}
+					error={errors.malware_type?.message}
+				/>
+
+				<Input
+					label='Delivery'
+					{...register('delivery', { required: 'This field is required' })}
+					error={errors.delivery?.message}
+				/>
+
+				<Input
+					label='Flash Drive Number'
+					{...register('flash_drive_number', {
+						required: 'This field is required',
+					})}
+					error={errors.flash_drive_number?.message}
+				/>
+
+				<DatePicker
+					label='Detection date'
+					{...register('date_detection', {
+						required: 'This field is required',
+					})}
+					error={errors.date_detection?.message}
+					time={true}
+				/>
+
+				<TextArea
+					label='Infected files'
+					{...register('infected_files', {
+						required: 'This field is required',
+					})}
+					rows={5}
+					error={errors.infected_files?.message}
+				/>
+
+				<Input
+					label='Infected disk'
+					{...register('infected_disk', {
+						required: 'This field is required',
+					})}
+					error={errors.infected_disk?.message}
+				/>
+
+				<Input
+					label='Creator rank and name'
+					{...register('creator', {
+						required: 'This field is required',
+					})}
+					error={errors.creator?.message}
+				/>
 
 				<Button type='submit' variant='outline' size='large'>
 					Submit

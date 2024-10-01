@@ -10,13 +10,15 @@ import urllib3
 from thehive4py.types.case import InputCase, OutputCase
 from thehive4py.types.share import InputShare, OutputShare
 
-from app.requests.av_case import AVCaseRequest
-from app.responses.create_av_case import CreateAVCaseResponse
+from app.requests.create_eset_case import CreateEsetCaseRequest
+from app.requests.create_pterodo_case import CreatePterodoCaseRequest
+from app.responses.create_case import CreateCaseResponse
 from app.utils.case_query import create_case_query
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-AVC_TEMPLATE_PATH = Path("app/templates/avc_template.txt")
+ESET_TEMPLATE_PATH = Path("app/templates/eset_template.txt")
+PTERODO_TEMPLATE_PATH = Path("app/templates/pterodo_template.txt")
 
 
 class HiveApi:
@@ -41,8 +43,8 @@ class HiveApi:
             fields = {}
         self.hive.case.update(case_id=case_id, fields=fields, **kwargs)
 
-    def query_find_cases(self, query:str):
-         return self.hive.session.make_request(
+    def query_find_cases(self, query: str):
+        return self.hive.session.make_request(
             method="POST",
             path="/api/v1/query?name=cases.count",
             json=json.loads(query)
@@ -58,8 +60,6 @@ class HiveApi:
                    like_title: str = None,
                    assignee: str = "6czi@cyber.ua"
                    ):
-
-
         query = create_case_query(
             limited_count=limited_count,
             created_at=created_at,
@@ -76,19 +76,58 @@ class HiveApi:
             json=query
         )
 
-    def create_case_av(self, avc: AVCaseRequest) -> CreateAVCaseResponse:
-        with AVC_TEMPLATE_PATH.open('r', encoding='utf-8') as f:
+    def create_pterodo_case(self, pterodo: CreatePterodoCaseRequest):
+        with PTERODO_TEMPLATE_PATH.open('r', encoding='utf-8') as f:
             template = f.read()
 
         description = template.format(
-            ip=avc.ip.strip(),
-            hostname=avc.hostname.lower().strip(),
-            responsible=avc.responsible.strip(),
-            responsible_is=avc.responsible_is.strip(),
-            unit=avc.unit.strip(),
-            critical=avc.critical,
+            ip=pterodo.ip.strip(),
+            hostname=pterodo.hostname.lower().strip(),
+            responsible=pterodo.responsible.strip(),
+            responsible_is=pterodo.responsible_is.strip(),
+            unit=pterodo.unit.strip(),
+            critical=pterodo.critical,
             date=datetime.now().strftime("%d.%m.%y"),
-            content=avc.content.strip()
+            edr=pterodo.edr,
+            av=pterodo.av,
+            threat_actor=pterodo.threat_actor,
+            malware_type=pterodo.malware_type,
+            delivery=pterodo.delivery,
+            flash_drive_number=pterodo.flash_drive_number,
+            date_detection=pterodo.date_detection.strftime("%d.%m.%y %H:%M:%S"),
+            infected_files=pterodo.infected_files,
+            infected_disk=pterodo.infected_disk,
+            creator=pterodo.creator
+        )
+
+        case = InputCase(
+            title="Malicious Code",
+            description=description,
+            assignee=self.assignee,
+            severity=1,
+            tags=["Manually", pterodo.ip, pterodo.hostname.lower(), pterodo.internet, pterodo.threat_actor]
+        )
+
+        case = self.create_case(case=case)
+
+        case_id = case.get("_id")
+        case_number = case.get("number")
+
+        return CreateCaseResponse(case_id=case_id, case_number=case_number)
+
+    def create_eset_case(self, eset: CreateEsetCaseRequest) -> CreateCaseResponse:
+        with ESET_TEMPLATE_PATH.open('r', encoding='utf-8') as f:
+            template = f.read()
+
+        description = template.format(
+            ip=eset.ip.strip(),
+            hostname=eset.hostname.lower().strip(),
+            responsible=eset.responsible.strip(),
+            responsible_is=eset.responsible_is.strip(),
+            unit=eset.unit.strip(),
+            critical=eset.critical,
+            date=datetime.now().strftime("%d.%m.%y"),
+            content=eset.content.strip()
         )
 
         case = InputCase(
@@ -96,7 +135,7 @@ class HiveApi:
             description=description,
             assignee=self.assignee,
             severity=1,
-            tags=["Manually", avc.ip, avc.hostname.lower(), avc.internet]
+            tags=["Manually", eset.ip, eset.hostname.lower(), eset.internet]
         )
 
         case = self.create_case(case=case)
@@ -123,4 +162,4 @@ class HiveApi:
         }
         self.update_case(case_id=case_id, case=updated_case)
 
-        return CreateAVCaseResponse(case_id=case_id, case_number=case_number)
+        return CreateCaseResponse(case_id=case_id, case_number=case_number)

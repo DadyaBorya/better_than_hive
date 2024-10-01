@@ -5,7 +5,15 @@ export interface CreateCasePterodoRequest {
 	responsible_is: string
 	unit: string
 	internet: 'Dnipro' | 'Internet'
-	critical: 1 | 2 | 3
+	critical: number
 	edr: '-' | '+'
 	av: '-' | '+'
+	threat_actor: string
+	malware_type: string
+	delivery: string
+	flash_drive_number: string
+	date_detection: Date | string
+	infected_files: string
+	infected_disk: string
+	creator: string
 }

@@ -1,13 +1,12 @@
-import { InputHTMLAttributes, forwardRef } from 'react'
+import { TextareaHTMLAttributes, forwardRef } from 'react'
 
-interface DatePickerProps extends InputHTMLAttributes<HTMLInputElement> {
+interface TextAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
 	label?: string
 	error?: string
-	time?: boolean
 }
 
-export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
-	({ label, error, className, time, ...props }, ref) => {
+export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
+	({ label, error, className, ...props }, ref) => {
 		return (
 			<div className='w-full'>
 				{label && (
@@ -15,10 +14,8 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
 						{label}
 					</label>
 				)}
-				<input
+				<textarea
 					ref={ref}
-					type={time ? 'datetime-local' : 'date'}
-					step={time ? '1' : ''}
 					className={`
             w-full px-3 py-2 rounded-md border
             bg-gray-800 text-white
@@ -30,7 +27,6 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
             ${className || ''}
           `}
 					{...props}
-					onClick={e => e.currentTarget.showPicker()}
 				/>
 				{error && <p className='mt-1 text-sm text-red-400'>{error}</p>}
 			</div>
@@ -38,6 +34,6 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
 	}
 )
 
-DatePicker.displayName = 'DatePicker'
+TextArea.displayName = 'TextArea'
 
-export default DatePicker
+export default TextArea

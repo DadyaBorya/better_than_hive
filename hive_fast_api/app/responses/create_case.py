@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class CreateAVCaseResponse(BaseModel):
+class CreateCaseResponse(BaseModel):
     case_id: str
     case_number: int
 
