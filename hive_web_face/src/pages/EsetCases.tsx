@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Button from '../components/Button'
@@ -9,6 +10,7 @@ import Table from '../components/Table'
 import TitleCard from '../components/TitleCard'
 import { CaseController } from '../controllers/CaseController'
 import { CaseResponse } from '../responses/case'
+import { useAlertStore } from '../stores/alertStore'
 import { getCaseUrl } from '../utils/case'
 import { fromTsToDateStr } from '../utils/date'
 
@@ -16,6 +18,8 @@ export function EsetCasesPage() {
 	const [cases, setCases] = useState<CaseResponse[]>([])
 	const [date, setDate] = useState<Date>(new Date())
 	const [loading, setLoading] = useState<boolean>(true)
+	const showAlert = useAlertStore(state => state.showAlert)
+
 	const navigate = useNavigate()
 
 	const fetchData = async () => {
@@ -25,8 +29,10 @@ export function EsetCasesPage() {
 			console.log(data[0].tags)
 
 			setCases(data)
-		} catch (e) {
-			console.log(e)
+		} catch (error) {
+			if (error instanceof AxiosError) {
+				showAlert('error', error.message)
+			}
 		} finally {
 			setLoading(false)
 		}

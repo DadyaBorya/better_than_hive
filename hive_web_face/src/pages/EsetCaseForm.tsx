@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios'
 import { useEffect, useState } from 'react'
 import { confirmAlert } from 'react-confirm-alert'
 import 'react-confirm-alert/src/react-confirm-alert.css'
@@ -9,10 +10,13 @@ import Select from '../components/Select'
 import TitleCard from '../components/TitleCard'
 import { CaseController } from '../controllers/CaseController'
 import { CreateCaseEsetRequest } from '../requests/createCaseEset'
+import { useAlertStore } from '../stores/alertStore'
 import { criticalCategoryOptions, internetOptions } from '../utils/case'
 
 export function EsetCaseFormPage() {
 	const [loading, setLoading] = useState<boolean>(false)
+	const showAlert = useAlertStore(state => state.showAlert)
+
 	const { register, handleSubmit, formState, reset } =
 		useForm<CreateCaseEsetRequest>({
 			mode: 'onChange',
@@ -50,8 +54,10 @@ export function EsetCaseFormPage() {
 				],
 				overlayClassName: 'bg-red-300',
 			})
-		} catch (e) {
-			console.log(e)
+		} catch (error) {
+			if (error instanceof AxiosError) {
+				showAlert('error', error.message)
+			}
 		} finally {
 			setLoading(false)
 		}

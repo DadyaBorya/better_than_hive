@@ -1,6 +1,8 @@
+import { AxiosError } from 'axios'
 import React, { useEffect, useState } from 'react'
 import { StatisticDailyController } from '../controllers/StatisticDailyController'
 import { DailyResponse } from '../responses/daily'
+import { useAlertStore } from '../stores/alertStore'
 import { ASSIGNEES } from '../utils/assigne'
 import Button from './Button'
 import Card from './Card'
@@ -18,6 +20,7 @@ export function DailyStat() {
 	const [data, setData] = useState<DailyResponse | null>(null)
 	const [assignee, setAssignee] = useState<string>('6czi@cyber.ua')
 	const [loading, setLoading] = useState<boolean>(true)
+	const showAlert = useAlertStore(state => state.showAlert)
 
 	const fetchData = async () => {
 		console.log('fetch')
@@ -26,7 +29,9 @@ export function DailyStat() {
 			const res = await StatisticDailyController.daily(date, assignee)
 			setData(res)
 		} catch (error) {
-			console.error(`Error fetching`, error)
+			if (error instanceof AxiosError) {
+				showAlert('error', error.message)
+			}
 		} finally {
 			setLoading(false)
 		}

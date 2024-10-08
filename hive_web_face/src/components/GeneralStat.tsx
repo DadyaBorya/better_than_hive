@@ -1,7 +1,9 @@
+import { AxiosError } from 'axios'
 import { useEffect, useState } from 'react'
 import { StatisticGeneralController } from '../controllers/StatisticGeneralController'
 import { GeneralRequest } from '../requests/general'
 import { GeneralResponse } from '../responses/general'
+import { useAlertStore } from '../stores/alertStore'
 import { ASSIGNEES } from '../utils/assigne'
 import { formatDate } from '../utils/date'
 import Button from './Button'
@@ -22,6 +24,7 @@ export function GeneralStat() {
 	const [startDate, setStartDate] = useState<Date | null>(null)
 	const [endDate, setEndDate] = useState<Date | null>(null)
 	const [assignee, setAssignee] = useState<string>('6czi@cyber.ua')
+	const showAlert = useAlertStore(state => state.showAlert)
 
 	const fetchData = async () => {
 		setLoading(true)
@@ -38,7 +41,9 @@ export function GeneralStat() {
 
 			setData(res)
 		} catch (error) {
-			console.error(`Error fetching`, error)
+			if (error instanceof AxiosError) {
+				showAlert('error', error.message)
+			}
 		} finally {
 			setLoading(false)
 		}
