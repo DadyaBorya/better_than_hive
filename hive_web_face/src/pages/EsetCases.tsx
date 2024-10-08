@@ -22,6 +22,8 @@ export function EsetCasesPage() {
 		try {
 			setLoading(true)
 			const data = await CaseController.caseEset(date)
+			console.log(data[0].tags)
+
 			setCases(data)
 		} catch (e) {
 			console.log(e)
@@ -64,11 +66,18 @@ export function EsetCasesPage() {
 			<LoadingWrapper loading={loading}>
 				<Table
 					className=''
-					headers={['Number', 'Resolved date', 'Status']}
+					headers={['Number', 'Tags', 'Resolved date', 'Status']}
 					rows={cases.map(i => [
 						<StyledLink href={getCaseUrl(i._id)} isExternal>
 							#{i.number}
 						</StyledLink>,
+						<div className='flex gap-2'>
+							{i.tags.map(t => (
+								<div className='inline-block bg-gray-800 text-gray-200 px-2 py-1 rounded-full text-sm font-semibold border border-gray-600'>
+									{t}
+								</div>
+							))}
+						</div>,
 						fromTsToDateStr(i.endDate),
 						<div
 							className={

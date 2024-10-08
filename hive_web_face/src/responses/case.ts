@@ -5,4 +5,5 @@ export interface CaseResponse {
 	number: string
 	endDate: number
 	_createdAt: number
+	tags: string[]
 }
