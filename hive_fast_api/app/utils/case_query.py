@@ -24,6 +24,9 @@ def create_case_query(
 ):
     q = copy.deepcopy(query)
 
+    if all and not assignee:
+        return q
+
     if all:
         q["query"].append(
             {

@@ -1,4 +1,7 @@
 # app/controllers/user.py
+import json
+from pathlib import Path
+from fastapi.responses import FileResponse
 
 from fastapi import APIRouter, Depends
 from datetime import date as _date
@@ -30,6 +33,21 @@ async def eset_case_create(avc: CreatePterodoCaseRequest, api: HiveApi = Depends
 @router.post("/case")
 async def case(req: CaseQueryRequest, api: HiveApi = Depends(get_hive_api)):
     return api.query_find_cases(query=req.query)
+
+
+@router.get("/case/all/file")
+async def case_all(api: HiveApi = Depends(get_hive_api)):
+    cases = api.find_cases(all=True)
+
+    file_path = Path("cases.json")
+    with file_path.open("w") as json_file:
+        json.dump(cases, json_file, indent=4, ensure_ascii=False)
+
+    return FileResponse(
+        path=str(file_path),
+        filename="cases.json",
+        media_type="application/json"
+    )
 
 
 @router.post("/case/eset/today")
