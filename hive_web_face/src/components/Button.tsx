@@ -3,11 +3,19 @@ import { ButtonHTMLAttributes, forwardRef } from 'react'
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 	variant?: 'primary' | 'secondary' | 'outline'
 	size?: 'small' | 'medium' | 'large'
+	loading?: boolean // Add loading prop
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 	(
-		{ className, variant = 'primary', size = 'medium', children, ...props },
+		{
+			className,
+			variant = 'primary',
+			size = 'medium',
+			children,
+			loading = false,
+			...props
+		},
 		ref
 	) => {
 		const baseStyle =
@@ -26,13 +34,40 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 			large: 'px-6 py-3 text-lg',
 		}
 
+		const spinner = (
+			<svg
+				className='animate-spin h-5 w-5 text-white'
+				xmlns='http://www.w3.org/2000/svg'
+				fill='none'
+				viewBox='0 0 24 24'
+			>
+				<circle
+					className='opacity-25'
+					cx='12'
+					cy='12'
+					r='10'
+					stroke='currentColor'
+					strokeWidth='4'
+				></circle>
+				<path
+					className='opacity-75'
+					fill='currentColor'
+					d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z'
+				></path>
+			</svg>
+		)
+
 		const classes = `${baseStyle} ${variants[variant]} ${sizes[size]} ${
 			className || ''
-		}`
+		} ${loading ? 'cursor-not-allowed opacity-75' : ''}`
 
 		return (
-			<button ref={ref} className={classes} {...props}>
-				{children}
+			<button ref={ref} className={classes} disabled={loading} {...props}>
+				{loading ? (
+					<div className='flex justify-center items-center'>{spinner}</div>
+				) : (
+					children
+				)}
 			</button>
 		)
 	}
