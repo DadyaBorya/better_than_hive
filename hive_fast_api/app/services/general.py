@@ -45,7 +45,7 @@ class GeneralService:
     def cases_pie_chart(case_dict):
         cases = [case for cases in case_dict.values() for case in cases]
 
-        title_counts = Counter(case["title"] for case in cases)
+        title_counts = Counter(case["title"].replace("\n", "").strip() for case in cases)
 
         mapped_cases = [
             {"name": title, "count": count}

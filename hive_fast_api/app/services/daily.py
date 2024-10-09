@@ -33,7 +33,7 @@ class DailyService:
 
         mapped_cases = [
             {"name": title, "count": count}
-            for title, count in Counter(case["title"] for case in cases).items()
+            for title, count in Counter(case["title"].replace("\n", "").strip() for case in cases).items()
         ]
 
         return mapped_cases
@@ -62,7 +62,7 @@ class DailyService:
         cases = api.find_cases(created_at=date, limited_count=False, assignee=assignee)
         mapped_cases = [
             {"name": title, "count": count}
-            for title, count in Counter(case["title"] for case in cases if
+            for title, count in Counter(case["title"].replace("\n", "").strip() for case in cases if
                                         "Функціонування АРМ з порушенням вимог Інструкції з організації антивірусного захисту в ІТС МО України та ЗСУ" not in
                                         case["description"]).items()
         ]
@@ -82,7 +82,7 @@ class DailyService:
 
         mapped_cases = [
             {"name": title, "count": count}
-            for title, count in Counter(case["title"] for case in cases).items()
+            for title, count in Counter(case["title"].replace("\n", "").strip() for case in cases).items()
         ]
 
         return mapped_cases
