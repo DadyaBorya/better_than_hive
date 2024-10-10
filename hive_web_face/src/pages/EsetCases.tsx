@@ -26,8 +26,6 @@ export function EsetCasesPage() {
 		try {
 			setLoading(true)
 			const data = await CaseController.caseEset(date)
-			console.log(date)
-			console.log(data)
 
 			setCases(data)
 		} catch (error) {
